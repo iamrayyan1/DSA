@@ -36,7 +36,7 @@ int main(){
     cout << "\nEnter the attendees' names for each seat.\n";
     for (int i = 0; i < numRows; i++){
         cout << "\nRow " << i + 1 << ":\n";
-        for (int j = 0; j < seatsPerRow[i]; j++){  // Use seatsPerRow to get the number of seats
+        for (int j = 0; j < seatsPerRow[i]; j++){
             cout << "Enter name for seat " << j + 1 << ": ";
             cin >> seatingChart[i][j];
         }
