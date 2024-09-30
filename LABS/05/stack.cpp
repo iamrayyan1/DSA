@@ -1,6 +1,3 @@
-// like bread packet
-
-// container that stores data
 
 // insertion -> push
 // delete -> pop
