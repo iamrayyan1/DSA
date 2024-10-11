@@ -1,69 +1,84 @@
-#include <iostream>
-
+#include<iostream>
+#include<vector>
 using namespace std;
 
-bool isSafeToPlace(int **chessBoard, int boardSize, int row, int col) {
-    for (int i = 0; i < boardSize; ++i)
-        if (chessBoard[row][i] || chessBoard[i][col])
-            return false;
+bool isSafe(int row, int col, vector<string> board, int n){     // you have to check for 3 directions only
+    //Check the upper diagonal
+    int duprow = row;
+    int dupcol = col;
 
-    for (int i = 0; i < boardSize; ++i) {
-        if (row - i >= 0 && col - i >= 0 && chessBoard[row - i][col - i])
+    while(row >= 0 && col >= 0){
+        if(board[row][col] == 'Q')
             return false;
-        if (row + i < boardSize && col + i < boardSize && chessBoard[row + i][col + i])
+        row--;
+        col--;
+    }
+
+    // check left
+    col = dupcol;
+    row = duprow;
+    while(col>=0){
+        if(board[row][col] == 'Q'){
             return false;
-        if (row - i >= 0 && col + i < boardSize && chessBoard[row - i][col + i])
+        }
+        col--;
+    }
+
+    //Check the lower diagonal
+    col = dupcol;
+    row = duprow;
+    while(row<n && col>=0){
+        if(board[row][col] == 'Q'){
             return false;
-        if (row + i < boardSize && col - i >= 0 && chessBoard[row + i][col - i])
-            return false;
+        }
+        row++;
+        col--;
     }
 
     return true;
+
 }
 
-bool solveNQueensRecursive(int **chessBoard, int boardSize, int col) {
-    if (col >= boardSize)
-        return true;
 
-    for (int row = 0; row < boardSize; ++row) {
-        if (isSafeToPlace(chessBoard, boardSize, row, col)) {
-            chessBoard[row][col] = 1; // Place queen
+void solve(int col, vector<string> &board, vector<vector<string>> &ans, int n){
+    if(col == n){              // base case
+        ans.push_back(board);
+        return;
+    }
 
-            if (solveNQueensRecursive(chessBoard, boardSize, col + 1))
-                return true;
-
-            chessBoard[row][col] = 0; // Backtrack
+    for(int row = 0; row<n; row++){       // traversing through each row of column
+        if(isSafe(row, col, board, n)){   // checking if all 3 conditions are met
+            board[row][col] = 'Q';
+            solve(col+1, board, ans, n);  //  recursively calling function and moving to next col
+            board[row][col] = '.';        // after coming back changing Q back to '.'
         }
     }
-
-    return false;
 }
 
-int **solveNQueens(int boardSize) {
-    int **chessBoard = new int*[boardSize];
-    for (int i = 0; i < boardSize; ++i)
-        chessBoard[i] = new int[boardSize](); // Initialize board with zeros (no queens)
 
-    solveNQueensRecursive(chessBoard, boardSize, 0);
-    return chessBoard;
-}
-
-int main() {
-    int boardSize;
-    cout << "Enter the size of the chessboard (N): ";
-    cin >> boardSize;
-
-    int **chessBoard = solveNQueens(boardSize);
-
-    for (int row = 0; row < boardSize; ++row) {
-        for (int col = 0; col < boardSize; ++col)
-            cout << (chessBoard[row][col] ? 'Q' : '.') << " "; // Print 'Q' for queen, '.' for empty
-        cout << endl;
+vector<vector<string>> solveNQueens(int n){
+    vector<vector<string>> ans;
+    vector<string> board(n);
+    string s(n, '.');
+    for(int i=0; i<n; i++){
+        board[i] = s;          // filling in empty characters on board
     }
 
-    for (int i = 0; i < boardSize; ++i)
-        delete[] chessBoard[i];
-    delete[] chessBoard;
+    solve(0, board, ans, n);    // starting from first col
+    return ans;
+}
 
+
+int main() {
+    int n = 4;
+    vector<vector<string>> result = solveNQueens(n);
+    
+    for(int i = 0; i < result.size(); i++) {
+        for(int j = 0; j < result[i].size(); j++) {
+            cout << result[i][j] << endl;
+        }
+        cout << endl;
+    }
+    
     return 0;
 }
