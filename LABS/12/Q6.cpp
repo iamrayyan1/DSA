@@ -30,11 +30,20 @@ void printAM(const vector<vector<int>> &AdjMat)
 
 int main()
 {
-    vector<vector<int>> adjMatrix = {
+    vector<vector<int>> AdjMat = {
         {0, 1, 1, 1},
         {1, 0, 1, 0},
         {1, 1, 0, 1},
         {1, 0, 1, 0}};
 
+    cout << "Adjacency Matrix:" << endl;
+    displayAdjMatrix(AdjMat);
 
+    if(isSymmetric(adjMatrix))
+    {
+        cout << "symmetric" << endl;
+    } else
+    {
+        cout << "not symmetric" << endl;
+    }
 }
